@@ -3,9 +3,13 @@ venv/
 __pycache__/
 src/__pycache__/
 
-data/raw/*
+*.pkl
+*.csv
+*.png
+
 data/processed/*
 
+!data/raw/*.csv
 !data/raw/.gitkeep
 !data/processed/.gitkeep
 
@@ -17,10 +21,6 @@ outputs/visualizations/*
 !outputs/predictions/.gitkeep
 !outputs/visualizations/.gitkeep
 
-*.pkl
-*.csv
-*.png
-
 .ipynb_checkpoints/
 
-.DS_Store
+**/.DS_Store
