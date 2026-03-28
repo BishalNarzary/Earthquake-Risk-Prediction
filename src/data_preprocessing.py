@@ -4,6 +4,7 @@ from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.model_selection import train_test_split
 from pathlib import Path
 import joblib
+import os
 
 class EarthquakePreprocessor:
     def __init__(self, test_size=0.2, random_state=42):
@@ -16,7 +17,6 @@ class EarthquakePreprocessor:
         Q1 = df[['latitude', 'longitude', 'depth', 'mag']].quantile(0.25)
         Q3 = df[['latitude', 'longitude', 'depth', 'mag']].quantile(0.75)
         IQR = Q3 - Q1
-
         df = df[~((df[['latitude', 'longitude', 'depth', 'mag']] < (Q1 - 1.5 * IQR)) |
                   (df[['latitude', 'longitude', 'depth', 'mag']] > (Q3 + 1.5 * IQR))).any(axis=1)]
         return df
@@ -80,7 +80,7 @@ def main():
     project_root = Path(__file__).resolve().parent.parent
     raw_path = project_root / "data" / "raw" / "earthquake_data.csv"
     processed_dir = project_root / "data" / "processed"
-    processed_dir.mkdir(parents=True, exist_ok=True)
+    os.makedirs(processed_dir, exist_ok=True)
 
     print("\n[1/4] Loading raw data...")
     df = pd.read_csv(raw_path)
@@ -98,7 +98,7 @@ def main():
     
     print("\n[4/4] Saving preprocessor...")
     model_dir = project_root / "outputs" / "models"
-    model_dir.mkdir(parents=True, exist_ok=True)
+    os.makedirs(model_dir, exist_ok=True)
     
     preprocessor_path = model_dir / "preprocessor.pkl"
     joblib.dump(preprocessor, preprocessor_path)

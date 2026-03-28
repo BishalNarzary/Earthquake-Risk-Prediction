@@ -4,6 +4,7 @@ import argparse
 import joblib
 import sys
 from pathlib import Path
+import os
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
@@ -269,7 +270,7 @@ def main():
         df, results = predictor.predict_from_csv(args.csv)
         
         if args.output:
-            Path(args.output).parent.mkdir(parents=True, exist_ok=True)
+            os.makedirs(Path(args.output).parent, exist_ok=True)
             df.to_csv(args.output, index=False)
             print(f"Predictions saved to {args.output}")
         else:

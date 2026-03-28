@@ -10,6 +10,7 @@ from pathlib import Path
 import joblib
 import time
 import warnings
+import os
 
 warnings.filterwarnings('ignore')
 np.random.seed(42)
@@ -227,7 +228,7 @@ def main():
     project_root = Path(__file__).resolve().parent.parent
     processed_dir = project_root / "data" / "processed"
     model_dir = project_root / "outputs" / "models"
-    model_dir.mkdir(parents=True, exist_ok=True)
+    os.makedirs(model_dir, exist_ok=True)
     
     print("\n[1/6] Loading preprocessed data...")
     X_train = pd.read_csv(processed_dir / "X_train.csv")
@@ -241,7 +242,6 @@ def main():
     
     print(f"  Training samples: {len(X_train)} with {X_train.shape[1]} features")
     print(f"  Testing samples: {len(X_test)}")
-    
     print("\n  Class distribution in training set:")
     for class_label, count in y_train.value_counts().sort_index().items():
         print(f"    - Class {class_label}: {count} samples")

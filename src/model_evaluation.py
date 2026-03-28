@@ -14,6 +14,7 @@ from sklearn.linear_model import LogisticRegression
 from pathlib import Path
 import joblib
 import sys
+import os
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
@@ -74,11 +75,9 @@ class EarthquakeModelEvaluator:
         sns.heatmap(cm, annot=True, fmt='d',
                     xticklabels=self.labels,
                     yticklabels=self.labels)
- 
         plt.title("Confusion Matrix", fontsize=14, fontweight='bold')
         plt.xlabel("Predicted", fontsize=12)
         plt.ylabel("Actual", fontsize=12)
- 
         plt.tight_layout()
         plt.savefig(save_path, dpi=300, bbox_inches='tight')
         plt.close()
@@ -95,7 +94,6 @@ class EarthquakeModelEvaluator:
             plt.barh(range(len(indices)), importances[indices], color=colors)
             plt.yticks(range(len(indices)), [feature_names[i] for i in indices])
             plt.gca().invert_yaxis()
- 
             plt.title("Feature Importance", fontsize=14, fontweight='bold')
             plt.xlabel("Importance", fontsize=12)
             plt.tight_layout()
@@ -179,7 +177,7 @@ def main():
     model_path = project_root / "outputs" / "models" / "model.pkl"
     preprocessor_path = project_root / "outputs" / "models" / "preprocessor.pkl"
     vis_dir = project_root / "outputs" / "visualizations"
-    vis_dir.mkdir(parents=True, exist_ok=True)
+    os.makedirs(vis_dir, exist_ok=True)
  
     print("\n[1/6] Loading processed data...")
     X_train = pd.read_csv(processed_dir / "X_train.csv")
@@ -214,17 +212,14 @@ def main():
     evaluator.cross_validate(X_train, y_train)
  
     print("\n[5/6] Generating visualizations...")
-    
     evaluator.plot_confusion_matrix(
         y_test, y_pred,
         vis_dir / "confusion_matrix.png"
     )
- 
     evaluator.plot_feature_importance(
         model, feature_names,
         vis_dir / "feature_importance.png"
     )
- 
     evaluator.plot_precision_recall(
         X_test, y_test,
         vis_dir / "precision_recall_curve.png"
